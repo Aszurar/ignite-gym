@@ -55,6 +55,7 @@ model Gym {
   create_at   DateTime  @default(now())
   updated_at  DateTime  @updatedAt
   checkIns    CheckIn[]
+  //Alteramos para camelCase no plural pois será usado no código
 
   @@map("gyms")
 }
