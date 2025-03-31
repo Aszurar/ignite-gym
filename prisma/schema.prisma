@@ -1,0 +1,60 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String    @id @default(uuid())
+  name          String
+  email         String    @unique
+  password_hash String
+  create_at     DateTime  @default(now())
+  updated_at    DateTime  @updatedAt
+  checkIns      CheckIn[]
+  //Alteramos para camelCase no plural pois será usado no código
+
+  @@map("users")
+}
+
+model CheckIn {
+  id          String    @id @default(uuid())
+  validate_at DateTime?
+  created_at  DateTime  @default(now())
+  updated_at  DateTime  @updatedAt
+
+  // Cada usuário pode ter vários check-ins 
+  // Cada check-in pertence a um único usuário
+  user    User   @relation(fields: [user_id], references: [id])
+  user_id String //Fk guarda o id de user relacionado
+
+  // Cada academia pode ter vários check-ins
+  // Cada check-in pertence a uma única academia 
+  gym    Gym    @relation(fields: [gym_id], references: [id])
+  gym_id String //Fk guarda o id da gym relacionado
+
+  @@map("check_ins")
+}
+
+model Gym {
+  id          String    @id @default(uuid())
+  title       String
+  phone       String?
+  description String?
+  latitude    Decimal
+  longitude   Decimal
+  create_at   DateTime  @default(now())
+  updated_at  DateTime  @updatedAt
+  checkIns    CheckIn[]
+
+  @@map("gyms")
+}
