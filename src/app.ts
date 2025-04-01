@@ -1,6 +1,7 @@
-import { PrismaClient } from '@prisma/client'
 import fastify from 'fastify'
+
+import { userRoutes } from './routes/user'
 
 export const app = fastify()
 
-const prisma = new PrismaClient()
+app.register(userRoutes, { prefix: '/user' })
