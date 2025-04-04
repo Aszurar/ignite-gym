@@ -9,14 +9,19 @@
     "lint": "eslint src --ext .ts --fix",
     "build": "tsup src --out-dir build",
     "start": "node build/server.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "migrate-dev:postgres": "dotenv -e .env.local -- npx prisma migrate dev",
+    "migrate-prod:postgres": "dotenv -e .env.local -- npx prisma migrate deploy",
+    "prisma-studio": "dotenv -e .env.local -- npx prisma studio",
+    "test": "dotenv -e .env.local -- jest -i"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
     "@prisma/client": "6.5.0",
+    "bcryptjs": "3.0.2",
     "dotenv": "16.4.7",
+    "dotenv-cli": "8.0.0",
     "fastify": "5.2.1",
     "zod": "3.24.2"
   },
