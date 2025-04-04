@@ -16,6 +16,11 @@ const envSchema = z.object({
       invalid_type_error: 'PORT should be a number',
     })
     .default(3333),
+  PASSWORD_ROUNDS: z.coerce
+    .number({
+      invalid_type_error: 'PASSWORD_ROUNDS should be a number',
+    })
+    .default(6),
 })
 
 const _env = envSchema.safeParse(process.env)
