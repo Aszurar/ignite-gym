@@ -9,6 +9,7 @@
     "lint": "eslint src --ext .ts --fix",
     "build": "tsup src --out-dir build",
     "start": "node build/server.js",
+    "dev:env": "dotenv -e .env.local -- tsx watch src/server.ts",
     "migrate-dev:postgres": "dotenv -e .env.local -- npx prisma migrate dev",
     "migrate-prod:postgres": "dotenv -e .env.local -- npx prisma migrate deploy",
     "prisma-studio": "dotenv -e .env.local -- npx prisma studio",
