@@ -18,7 +18,7 @@ model User {
   name          String
   email         String    @unique
   password_hash String
-  create_at     DateTime  @default(now())
+  created_at    DateTime  @default(now())
   updated_at    DateTime  @updatedAt
   checkIns      CheckIn[]
   //Alteramos para camelCase no plural pois será usado no código
@@ -52,7 +52,7 @@ model Gym {
   description String?
   latitude    Decimal
   longitude   Decimal
-  create_at   DateTime  @default(now())
+  created_at  DateTime  @default(now())
   updated_at  DateTime  @updatedAt
   checkIns    CheckIn[]
   //Alteramos para camelCase no plural pois será usado no código
