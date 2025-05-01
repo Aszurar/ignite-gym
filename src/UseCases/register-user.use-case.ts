@@ -12,7 +12,7 @@ interface IRegisterUserUseCaseRequest {
 }
 
 class RegisterUserUseCase {
-  private userRepository: IUserRepository
+  private readonly userRepository: IUserRepository
 
   constructor(userRepository: IUserRepository) {
     this.userRepository = userRepository
@@ -30,11 +30,15 @@ class RegisterUserUseCase {
     const rounds = env.PASSWORD_ROUNDS
     const passwordHash = await hash(password, rounds)
 
-    await this.userRepository.create({
+    const user = await this.userRepository.create({
       name,
       email,
       password_hash: passwordHash,
     })
+
+    return {
+      user,
+    }
   }
 }
 
