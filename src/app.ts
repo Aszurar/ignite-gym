@@ -1,6 +1,7 @@
 import fastify from 'fastify'
 import { ZodError } from 'zod'
 
+import { STATUS_INFO } from './constants'
 import { env } from './env'
 import { Environment } from './env/utils'
 import { userRoutes } from './http/Routes/user'
@@ -11,8 +12,8 @@ app.register(userRoutes)
 
 app.setErrorHandler((error, _, reply) => {
   if (error instanceof ZodError) {
-    return reply.status(400).send({
-      message: 'Validation error',
+    return reply.status(STATUS_INFO.BAD_REQUEST.code).send({
+      message: STATUS_INFO.BAD_REQUEST.messages.validation,
       issues: error.flatten().fieldErrors,
     })
   }
@@ -25,7 +26,7 @@ app.setErrorHandler((error, _, reply) => {
     // log.error(error)
   }
 
-  return reply.status(500).send({
-    message: 'Internal server error',
+  return reply.status(STATUS_INFO.INTERNAL_SERVER_ERROR.code).send({
+    message: STATUS_INFO.INTERNAL_SERVER_ERROR.messages.default,
   })
 })
