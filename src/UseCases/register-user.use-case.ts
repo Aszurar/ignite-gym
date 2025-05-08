@@ -1,3 +1,4 @@
+import { User } from '@prisma/client'
 import { hash } from 'bcryptjs'
 
 import { env } from '@/env'
@@ -11,6 +12,10 @@ interface IRegisterUserUseCaseRequest {
   password: string
 }
 
+interface IRegisterUserUseCaseResponse {
+  user: User
+}
+
 class RegisterUserUseCase {
   private readonly userRepository: IUserRepository
 
@@ -18,7 +23,9 @@ class RegisterUserUseCase {
     this.userRepository = userRepository
   }
 
-  async execute(data: IRegisterUserUseCaseRequest) {
+  async execute(
+    data: IRegisterUserUseCaseRequest,
+  ): Promise<IRegisterUserUseCaseResponse> {
     const { name, email, password } = data
 
     const userWithSameEmail = await this.userRepository.findByEmail(email)
