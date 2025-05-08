@@ -1,5 +1,6 @@
 import { FastifyReply, FastifyRequest } from 'fastify'
 
+import { STATUS_INFO } from '@/constants'
 import { UserAlreadyExistsError } from '@/UseCases/errors/user-already-exists-error'
 import { makeRegisterUserUseCase } from '@/UseCases/factories/make-register-user.use-case'
 import { createUserSchema } from '@/validations/user/create'
@@ -12,11 +13,12 @@ class RegisterUserController {
 
     try {
       const registerUserUseCase = makeRegisterUserUseCase()
-      registerUserUseCase.execute(dataValidated)
+      await registerUserUseCase.execute(dataValidated)
     } catch (error) {
       // User already exists?
       if (error instanceof UserAlreadyExistsError) {
-        return reply.status(409).send({
+        return reply.status(STATUS_INFO.CONFLICT.code).send({
+          statusCode: error.code,
           message: error.message,
         })
       }
@@ -24,7 +26,7 @@ class RegisterUserController {
       throw error
     }
 
-    return reply.status(201).send()
+    return reply.status(STATUS_INFO.CREATED.code).send()
   }
 }
 
