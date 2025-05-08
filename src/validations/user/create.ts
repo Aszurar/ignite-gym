@@ -11,11 +11,11 @@ const createUserSchema = z
       .regex(/[A-Z]/, 'Password must contain at least one uppercase letter')
       .regex(/\d/, 'Password must contain at least one number')
       .regex(
-        /[@$!%*?&]/,
+        /[.@$!%*?&]/,
         'Password must contain at least one special character',
       )
       .max(20, 'Password must be at most 20 characters long'),
-    confirmPassword: z.string().min(8, 'Confirm password is required'),
+    confirmPassword: z.string().min(8, 'Confirm password is invalid'),
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: "Passwords don't match",
