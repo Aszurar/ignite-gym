@@ -47,7 +47,15 @@ const STATUS_INFO = {
     code: 409,
     messages: {
       default: '',
-      userAlreadyExists: 'User already exists',
+      userAlreadyExists: 'User already exists.',
+      maxNumberOfCheckInsError: 'Max number of check-ins reached.',
+    },
+  },
+  UNPROCESSABLE_ENTITY: {
+    code: 422,
+    messages: {
+      default: '',
+      invalidDistanceBetweenUserAndGym: 'Invalid distance between user and gym',
     },
   },
   INTERNAL_SERVER_ERROR: {
