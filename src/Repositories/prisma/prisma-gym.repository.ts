@@ -5,7 +5,7 @@ import { prisma } from '@/lib/prisma'
 import { IGymRepository } from '../interfaces/gym.repository'
 
 class PrismaGymRepository implements IGymRepository {
-  async create(data: Prisma.GymUncheckedCreateInput) {
+  async create(data: Prisma.GymCreateInput) {
     const gym = await prisma.gym.create({ data })
 
     return gym
