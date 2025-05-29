@@ -2,10 +2,11 @@ import { Gym } from '@prisma/client'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 import { InMemoryCheckInRepository } from '@/Repositories/InMemory/in-memory-check-in-user.repository'
-import { InMemoryGymRepository } from '@/Repositories/InMemory/in-memory-gym-.repository'
+import { InMemoryGymRepository } from '@/Repositories/InMemory/in-memory-gym.repository'
 
 import { CheckInUserUseCase } from '../check-in-user.user-case'
 import { MaxNumberOfCheckInsError } from '../errors/max-number-of-check-ins-error'
+import { ResourceNotFoundError } from '../errors/resource-not-found-error'
 import { RegisterGymUseCase } from '../register-gym.use-case'
 
 // check-in
@@ -125,5 +126,16 @@ describe('CheckIn User Use Case', () => {
         userLongitude: userInvalidCoordinates.longitude,
       }),
     ).rejects.toThrow(Error)
+  })
+
+  it('should not be able to check in to an unregistered gym', async () => {
+    await expect(() =>
+      checkInUserUseCase.execute({
+        gymId: '123213312',
+        userId: 'user-01',
+        userLatitude: userInvalidCoordinates.latitude,
+        userLongitude: userInvalidCoordinates.longitude,
+      }),
+    ).rejects.toThrow(ResourceNotFoundError)
   })
 })
