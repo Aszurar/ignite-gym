@@ -4,8 +4,8 @@ import { IGymRepository } from '@/Repositories/interfaces/gym.repository'
 
 interface IGymUseCaseRequest {
   title: string
-  description: string
-  phone: string
+  description?: string
+  phone?: string
   latitude: number
   longitude: number
 }
