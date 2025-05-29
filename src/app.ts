@@ -4,11 +4,13 @@ import { ZodError } from 'zod'
 import { STATUS_INFO } from './constants'
 import { env } from './env'
 import { Environment } from './env/utils'
+import { gymRoutes } from './http/Routes/gym'
 import { userRoutes } from './http/Routes/user'
 
 export const app = fastify()
 
 app.register(userRoutes)
+app.register(gymRoutes)
 
 app.setErrorHandler((error, _, reply) => {
   if (error instanceof ZodError) {
