@@ -49,4 +49,26 @@ describe('Get check ins user history Use Case', () => {
 
     expect(checkIns).toHaveLength(0)
   })
+
+  it('should be able to list check-in history with pagination', async () => {
+    for (let i = 1; i <= 22; i++) {
+      await inMemoryCheckInRepository.create({
+        gym_id: `gym-${i.toString().padStart(2, '0')}`,
+        user_id: 'user-01',
+      })
+    }
+
+    const { checkIns } = await memberCheckInsHistoryUseCase.execute({
+      userId: 'user-01',
+      page: 2,
+    })
+
+    expect(checkIns).toHaveLength(2)
+    expect(checkIns).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ gym_id: 'gym-21' }),
+        expect.objectContaining({ gym_id: 'gym-22' }),
+      ]),
+    )
+  })
 })
