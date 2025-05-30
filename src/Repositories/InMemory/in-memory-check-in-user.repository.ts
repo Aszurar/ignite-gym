@@ -44,4 +44,68 @@ export class InMemoryCheckInRepository implements ICheckInRepository {
 
     return checkInOnSameDate || null
   }
+
+  /**
+   * Busca check-ins de um usuário com paginação
+   *
+   * @param userId - ID do usuário
+   * @param page - Número da página (começa em 1)
+   * @returns Array com até 20 check-ins da página solicitada
+   *
+   * @example
+   * // Considerando 85 check-ins no total:
+   * findManyByUserId('user-123', 1) // Retorna itens 0-19   (20 itens)
+   * findManyByUserId('user-123', 2) // Retorna itens 20-39  (20 itens)
+   * findManyByUserId('user-123', 3) // Retorna itens 40-59  (20 itens)
+   * findManyByUserId('user-123', 4) // Retorna itens 60-79  (20 itens)
+   * findManyByUserId('user-123', 5) // Retorna itens 80-84  (5 itens)
+   *
+   * @description
+   * A paginação funciona com o método slice(start, end):
+   *
+   * - start: (page - 1) * 20
+   *   - Página 1: (1-1) * 20 = 0 (começa no índice 0)
+   *   - Página 2: (2-1) * 20 = 20 (começa no índice 20)
+   *   - Página 3: (3-1) * 20 = 40 (começa no índice 40)
+   *
+   * - end: start + 20
+   *   - Sempre 20 posições após o start
+   *   - Página 1: 0 + 20 = 20 (pega até índice 19)
+   *   - Página 2: 20 + 20 = 40 (pega até índice 39)
+   *
+   * - slice(start, end):
+   *   - Extrai elementos do índice 'start' até 'end-1'
+   *   - slice(0, 20) → pega índices [0, 1, 2, ..., 19]
+   *   - slice(20, 40) → pega índices [20, 21, 22, ..., 39]
+   *   - O índice 'end' NÃO é incluído no resultado
+   *
+   * - Total: 85 check-ins
+   *   - Items por página: 20
+   *   - Página 1: itens 0-19    (20 itens)
+   *   - Página 2: itens 20-39   (20 itens)
+   *   - Página 3: itens 40-59   (20 itens)
+   *   - Página 4: itens 60-79   (20 itens)
+   *   - Página 5: itens 80-84   (5 itens)
+   */
+  async findManyByUserId(userId: string, page: number): Promise<CheckIn[]> {
+    const checkIns = this.checkIns.filter(
+      (checkIn) => checkIn.user_id === userId,
+    )
+    // 2. Calcula índices de início e fim
+    const start = (page - 1) * 20 // Índice inicial
+    const end = start + 20 // Índice final
+
+    // 3. Retorna apenas os itens da página atual
+    const paginatedCheckIns = checkIns.slice(start, end)
+
+    return paginatedCheckIns
+  }
+
+  async countByUserId(userId: string): Promise<number> {
+    const userCheckIns = this.checkIns.filter(
+      (checkIn) => checkIn.user_id === userId,
+    )
+
+    return userCheckIns.length
+  }
 }
