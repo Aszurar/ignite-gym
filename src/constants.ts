@@ -56,6 +56,8 @@ const STATUS_INFO = {
     messages: {
       default: '',
       invalidDistanceBetweenUserAndGym: 'Invalid distance between user and gym',
+      lateCheckInValidationError:
+        'The check-in can only be validated until 20 minutes of its creation.',
     },
   },
   INTERNAL_SERVER_ERROR: {
