@@ -20,7 +20,7 @@ class SearchGymUseCase {
 
   async execute({
     query,
-    page = 1,
+    page,
   }: ISearchGymUseCaseRequest): Promise<ISearchGymUseCaseResponse> {
     const gyms = await this.gymRepository.searchMany(query, page)
 
