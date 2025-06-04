@@ -12,7 +12,7 @@ interface IGetNearbyGymsUseCaseResponse {
   gyms: Gym[]
 }
 
-class GetNearbyGymUseCase {
+class GetNearbyGymsUseCase {
   private readonly gymRepository: IGymRepository
 
   constructor(gymRepository: IGymRepository) {
@@ -38,4 +38,4 @@ class GetNearbyGymUseCase {
   }
 }
 
-export { GetNearbyGymUseCase }
+export { GetNearbyGymsUseCase }

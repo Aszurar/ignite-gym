@@ -2,10 +2,10 @@ import { beforeEach, describe, expect, it } from 'vitest'
 
 import { InMemoryGymRepository } from '@/Repositories/InMemory/in-memory-gym.repository'
 
-import { GetNearbyGymUseCase } from '../get-nearby-gyms.use-case'
+import { GetNearbyGymsUseCase } from '../get-nearby-gyms.use-case'
 
 let inMemoryGymRepository: InMemoryGymRepository
-let getNearbyUseCase: GetNearbyGymUseCase
+let getNearbyUseCase: GetNearbyGymsUseCase
 
 const nearbyGymsCoordinates = {
   latitude: -7.074025689553661,
@@ -25,7 +25,7 @@ const farAwayGymsCoordinates = {
 describe('Get Nearby Gym Use Case', () => {
   beforeEach(async () => {
     inMemoryGymRepository = new InMemoryGymRepository()
-    getNearbyUseCase = new GetNearbyGymUseCase(inMemoryGymRepository)
+    getNearbyUseCase = new GetNearbyGymsUseCase(inMemoryGymRepository)
   })
 
   it('should be able to search for gyms ', async () => {
