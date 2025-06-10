@@ -13,7 +13,18 @@ class AuthenticateUserController {
 
     try {
       const authenticateUserUseCase = makeAuthenticateUserUseCase()
-      await authenticateUserUseCase.execute(dataValidated)
+      const { user } = await authenticateUserUseCase.execute(dataValidated)
+
+      const token = await reply.jwtSign(
+        {},
+        {
+          sub: user.id,
+        },
+      )
+
+      return reply.status(STATUS_INFO.OK.code).send({
+        token,
+      })
     } catch (error) {
       if (error instanceof InvalidCredentialsError) {
         // Invalid credentials?
@@ -24,8 +35,6 @@ class AuthenticateUserController {
       }
       throw error
     }
-
-    return reply.status(STATUS_INFO.OK.code).send()
   }
 }
 

@@ -28,7 +28,7 @@ const STATUS_INFO = {
   UNAUTHORIZED: {
     code: 401,
     messages: {
-      default: '',
+      default: 'Unauthorized',
     },
   },
   FORBIDDEN: {

@@ -21,6 +21,15 @@ const envSchema = z.object({
       invalid_type_error: 'PASSWORD_ROUNDS should be a number',
     })
     .default(6),
+  DATABASE_URL: z
+    .string({
+      required_error: 'DATABASE_URL env is required',
+    })
+    .trim()
+    .min(1),
+  JWT_SECRET: z.string({
+    invalid_type_error: 'JWT_SECRET should be a string',
+  }),
 })
 
 const _env = envSchema.safeParse(process.env)
