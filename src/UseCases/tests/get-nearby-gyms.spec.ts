@@ -43,13 +43,13 @@ describe('Get Nearby Gym Use Case', () => {
       latitude: farAwayGymsCoordinates.latitude, // 40km de distância
       longitude: farAwayGymsCoordinates.longitude, // 40km de distância
     })
-    const { gyms } = await getNearbyUseCase.execute({
+    const { data, meta } = await getNearbyUseCase.execute({
       userLatitude: userCoordinates.latitude,
       userLongitude: userCoordinates.longitude,
       page: 1,
     })
-    expect(gyms).toHaveLength(1)
-    expect(gyms).toEqual(
+    expect(meta.totalCount).toEqual(1)
+    expect(data.gyms).toEqual(
       expect.arrayContaining([
         expect.objectContaining({ title: 'JavaScript' }),
       ]),
@@ -82,14 +82,14 @@ describe('Get Nearby Gym Use Case', () => {
       longitude: nearbyGymsCoordinates.longitude,
     })
 
-    const { gyms } = await getNearbyUseCase.execute({
+    const { data } = await getNearbyUseCase.execute({
       userLatitude: userCoordinates.latitude,
       userLongitude: userCoordinates.longitude,
       page: 1,
     })
 
-    expect(gyms).toHaveLength(2)
-    expect(gyms).toEqual(
+    expect(data.gyms).toHaveLength(2)
+    expect(data.gyms).toEqual(
       expect.arrayContaining([
         expect.objectContaining({ title: 'Gym-21' }),
         expect.objectContaining({ title: 'Gym-22' }),

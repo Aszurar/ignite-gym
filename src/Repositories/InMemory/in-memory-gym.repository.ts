@@ -3,10 +3,11 @@ import { Gym, Prisma } from '@prisma/client'
 import { getDistanceBetweenCoordinates } from '@/utils/distance'
 
 import {
-  FindManyNearbyParamsType,
+  IFindManyNearbyParamsType,
   IGymRepository,
 } from '../interfaces/gym.repository'
 
+const PER_PAGE = 20
 export class InMemoryGymRepository implements IGymRepository {
   public gyms: Gym[] = []
 
@@ -153,7 +154,7 @@ export class InMemoryGymRepository implements IGymRepository {
    *   - Página 4: itens 60-79   (20 itens)
    *   - Página 5: itens 80-84   (5 itens)
    */
-  async findManyNearby(params: FindManyNearbyParamsType, page: number) {
+  async findManyNearby(params: IFindManyNearbyParamsType, page: number) {
     const nearbyDistance = 10 // Distância máxima em unidades (ex: km, milhas)
     const { latitude, longitude } = params
 
@@ -179,7 +180,19 @@ export class InMemoryGymRepository implements IGymRepository {
 
     // 3. Retorna apenas os itens da página atual
     const paginatedGyms = nearbyGyms.slice(start, end)
+    const totalPages = Math.ceil(nearbyGyms.length / PER_PAGE)
+    const totalCount = nearbyGyms.length
 
-    return paginatedGyms
+    return {
+      data: {
+        gyms: paginatedGyms,
+      },
+      meta: {
+        page,
+        perPage: PER_PAGE,
+        totalCount: totalCount,
+        totalPages: totalPages,
+      },
+    }
   }
 }

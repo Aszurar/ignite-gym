@@ -3,9 +3,11 @@ import { Gym, Prisma } from '@prisma/client'
 import { prisma } from '@/lib/prisma'
 
 import {
-  FindManyNearbyParamsType,
+  IFindManyNearbyParamsType,
   IGymRepository,
 } from '../interfaces/gym.repository'
+
+const PER_PAGE = 20 // Define a constant for items per page
 
 class PrismaGymRepository implements IGymRepository {
   async findById(id: string) {
@@ -19,16 +21,38 @@ class PrismaGymRepository implements IGymRepository {
   }
 
   async findManyNearby(
-    { latitude, longitude }: FindManyNearbyParamsType,
+    { latitude, longitude }: IFindManyNearbyParamsType,
     page: number,
   ) {
-    const gyms = await prisma.$queryRaw<Gym[]>`
-      SELECT * from gyms
-      WHERE ( 6371 * acos( cos( radians(${latitude}) ) * cos( radians( latitude ) ) * cos( radians( longitude ) - radians(${longitude}) ) + sin( radians(${latitude}) ) * sin( radians( latitude ) ) ) ) <= 10
-      LIMIT 20 OFFSET ${(page - 1) * 20}
-    `
+    const baseQuery = `
+    FROM gyms
+    WHERE ( 6371 * acos( cos( radians(${latitude}) ) * cos( radians( latitude ) ) * cos( radians( longitude ) - radians(${longitude}) ) + sin( radians(${latitude}) ) * sin( radians( latitude ) ) ) ) <= 10
+  `
 
-    return gyms
+    const [gyms, totalCountResult] = await prisma.$transaction([
+      prisma.$queryRaw<Gym[]>`
+      SELECT * ${Prisma.raw(baseQuery)}
+      LIMIT ${PER_PAGE} OFFSET ${(page - 1) * PER_PAGE}
+    `,
+      prisma.$queryRaw<[{ count: bigint }]>`
+      SELECT COUNT(*) as count ${Prisma.raw(baseQuery)}
+    `,
+    ])
+
+    const totalCount = Number(totalCountResult[0].count)
+    const totalPages = Math.ceil(totalCount / PER_PAGE)
+
+    return {
+      data: {
+        gyms,
+      },
+      meta: {
+        page,
+        perPage: PER_PAGE,
+        totalCount,
+        totalPages,
+      },
+    }
   }
 
   async searchMany(query: string, page: number): Promise<Gym[]> {

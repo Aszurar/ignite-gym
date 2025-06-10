@@ -1,6 +1,7 @@
 import { Gym } from '@prisma/client'
 
 import { IGymRepository } from '@/Repositories/interfaces/gym.repository'
+import { IMeta } from '@/utils/meta'
 
 interface IGetNearbyGymsUseCaseRequest {
   userLatitude: number
@@ -9,7 +10,10 @@ interface IGetNearbyGymsUseCaseRequest {
 }
 
 interface IGetNearbyGymsUseCaseResponse {
-  gyms: Gym[]
+  data: {
+    gyms: Gym[]
+  }
+  meta: IMeta
 }
 
 class GetNearbyGymsUseCase {
@@ -24,7 +28,7 @@ class GetNearbyGymsUseCase {
     userLongitude,
     page,
   }: IGetNearbyGymsUseCaseRequest): Promise<IGetNearbyGymsUseCaseResponse> {
-    const gyms = await this.gymRepository.findManyNearby(
+    const { data, meta } = await this.gymRepository.findManyNearby(
       {
         latitude: userLatitude,
         longitude: userLongitude,
@@ -33,7 +37,8 @@ class GetNearbyGymsUseCase {
     )
 
     return {
-      gyms,
+      data,
+      meta,
     }
   }
 }
