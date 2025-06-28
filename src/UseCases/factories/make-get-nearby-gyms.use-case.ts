@@ -4,7 +4,7 @@ import { GetNearbyGymsUseCase } from '../get-nearby-gyms.use-case'
 
 export function makeGetNearbyGymsUseCase() {
   const prismaGymRepository = new PrismaGymRepository()
-  const GgtNearbyGyms = new GetNearbyGymsUseCase(prismaGymRepository)
+  const getNearbyGyms = new GetNearbyGymsUseCase(prismaGymRepository)
 
-  return GgtNearbyGyms
+  return getNearbyGyms
 }
