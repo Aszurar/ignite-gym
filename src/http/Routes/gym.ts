@@ -1,9 +1,20 @@
 import { FastifyInstance } from 'fastify'
 
-import { RegisterGymController } from '../Controllers/register-gym.controller'
+import { verifyJwt } from '@/middleware/verify-jwt'
+
+import { NearbyGymController } from '../Controllers/gyms/nearby-gym.controller'
+import { RegisterGymController } from '../Controllers/gyms/register-gym.controller'
+import { SearchGymController } from '../Controllers/gyms/search-gym.controller'
 
 export async function gymRoutes(app: FastifyInstance) {
   const registerGymController = new RegisterGymController()
+  const searchGymsController = new SearchGymController()
+  const nearbyGymsController = new NearbyGymController()
 
-  app.post('/gym', registerGymController.handle)
+  // Add JWT verification middleware to all gyms routes
+  app.addHook('onRequest', verifyJwt)
+
+  app.post('/gyms', registerGymController.handle)
+  app.get('/gyms/search', searchGymsController.handle)
+  app.get('/gyms/nearby', nearbyGymsController.handle)
 }
