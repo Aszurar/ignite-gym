@@ -15,4 +15,4 @@ const createGymSchema = z.object({
 })
 
 export { createGymSchema }
-export type CreateUserInput = z.infer<typeof createGymSchema>
+export type CreateGymInput = z.infer<typeof createGymSchema>
