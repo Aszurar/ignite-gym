@@ -15,18 +15,16 @@ describe('Get user profile E2E Tests', () => {
 
   it('should get user profile data', async () => {
     // register a user
-    const registerResponse = await request(app.server).post('/users').send({
+    await request(app.server).post('/users').send({
       name: 'John Doe',
       email: 'johndoe@email.com',
       password: 'John.1234',
       confirmPassword: 'John.1234',
     })
 
-    console.log('Register Response:', registerResponse.body)
-
     const authResponse = await request(app.server).post('/sessions').send({
       email: 'johndoe@email.com',
-      password: 'John.12345',
+      password: 'John.1234',
     })
 
     const accessToken = authResponse.body.token
@@ -37,6 +35,9 @@ describe('Get user profile E2E Tests', () => {
       .set('Authorization', `Bearer ${accessToken}`)
       .send()
 
+    expect(authResponse.body).toEqual({
+      token: expect.any(String),
+    })
     expect(profileResponse.error).toBe(false)
     expect(profileResponse.statusCode).toBe(STATUS_INFO.OK.code)
     expect(profileResponse.body.data.user).toEqual(
