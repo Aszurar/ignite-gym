@@ -13,7 +13,7 @@ describe('Auth User E2E Tests', () => {
     await app.close()
   })
 
-  it.skip('should authenticate a user successfully', async () => {
+  it('should authenticate a user successfully', async () => {
     await request(app.server).post('/users').send({
       name: 'John Doe',
       email: 'johndoe@email.com',
