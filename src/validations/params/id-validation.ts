@@ -1,7 +1,7 @@
 import { z } from 'zod'
 
 const idValidationSchema = z.object({
-  id: z
+  sub: z
     .string({
       invalid_type_error: 'ID is invalid',
     })
