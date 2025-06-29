@@ -14,7 +14,7 @@ export async function gymRoutes(app: FastifyInstance) {
   // Add JWT verification middleware to all gyms routes
   app.addHook('onRequest', verifyJwt)
 
-  app.post('/gyms', registerGymController.handle)
+  app.post('/gym', registerGymController.handle)
   app.get('/gyms/search', searchGymsController.handle)
   app.get('/gyms/nearby', nearbyGymsController.handle)
 }
