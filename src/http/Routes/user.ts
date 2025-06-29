@@ -2,9 +2,9 @@ import { FastifyInstance } from 'fastify'
 
 import { verifyJwt } from '@/middleware/verify-jwt'
 
-import { AuthenticateUserController } from '../Controllers/authenticate-user.controller'
-import { GetUserController } from '../Controllers/get-user.controller'
-import { RegisterUserController } from '../Controllers/register-user.controller'
+import { AuthenticateUserController } from '../Controllers/users/authenticate-user.controller'
+import { GetUserController } from '../Controllers/users/get-user.controller'
+import { RegisterUserController } from '../Controllers/users/register-user.controller'
 
 export async function userRoutes(app: FastifyInstance) {
   const registerUserController = new RegisterUserController()
@@ -15,5 +15,6 @@ export async function userRoutes(app: FastifyInstance) {
 
   app.post('/sessions', authenticateUserController.handle)
 
-  app.get('/users/:id', { onRequest: [verifyJwt] }, getUserController.handler)
+  // User needs to be authenticated to access this route
+  app.get('/me', { onRequest: [verifyJwt] }, getUserController.handler)
 }
