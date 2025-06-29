@@ -8,7 +8,7 @@ interface IGetUserUseCaseRequest {
   userId: string
 }
 
-type UserResponseType = Omit<User, 'password_hash' | 'id'>
+type UserResponseType = Omit<User, 'password_hash'>
 
 interface IGetUserUseCaseResponse {
   user: UserResponseType
@@ -31,6 +31,7 @@ class GetUserUseCase {
     }
 
     const userResponse: UserResponseType = {
+      id: user.id,
       name: user.name,
       email: user.email,
       created_at: user.created_at,
