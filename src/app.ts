@@ -5,6 +5,7 @@ import { ZodError } from 'zod'
 import { STATUS_INFO } from './constants'
 import { env } from './env'
 import { Environment } from './env/utils'
+import { checkInRoutes } from './http/Routes/check-in'
 import { gymRoutes } from './http/Routes/gym'
 import { userRoutes } from './http/Routes/user'
 
@@ -16,6 +17,7 @@ app.register(fastifyJwt, {
 
 app.register(userRoutes)
 app.register(gymRoutes)
+app.register(checkInRoutes)
 
 app.setErrorHandler((error, _, reply) => {
   if (error instanceof ZodError) {
