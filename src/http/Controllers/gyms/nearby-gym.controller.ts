@@ -10,12 +10,6 @@ class NearbyGymController {
 
     const queryData = nearbyGymQuerySchema.parse(query)
 
-    console.log('NearbyGymController', {
-      userLatitude: queryData['user-latitude'],
-      userLongitude: queryData['user-longitude'],
-      page: queryData.page,
-    })
-
     const nearbyGymUseCase = makeGetNearbyGymsUseCase()
     const nearbyGyms = await nearbyGymUseCase.execute({
       userLatitude: queryData['user-latitude'],
