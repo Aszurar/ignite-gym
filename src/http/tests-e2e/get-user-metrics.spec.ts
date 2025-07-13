@@ -70,6 +70,6 @@ describe('Get user metrics E2E Tests', () => {
 
     expect(response.error).toBe(false)
     expect(response.statusCode).toBe(STATUS_INFO.OK.code)
-    expect(response.body.data.checkInsCount).toEqual(1)
+    expect(response.body.data.checkInsCount).toEqual(2)
   })
 })
