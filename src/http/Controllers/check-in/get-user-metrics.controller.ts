@@ -5,8 +5,8 @@ import { makeGetUserMetricsUseCase } from '@/UseCases/factories/make-get-user-me
 
 class GetUserMetricsController {
   async handle(request: FastifyRequest, reply: FastifyReply) {
-    const makeGetCheckInHistory = makeGetUserMetricsUseCase()
-    const userMetrics = await makeGetCheckInHistory.execute({
+    const makeGetUserMetrics = makeGetUserMetricsUseCase()
+    const userMetrics = await makeGetUserMetrics.execute({
       userId: request.user.sub,
     })
 

@@ -1,32 +1,36 @@
 import { FastifyReply, FastifyRequest } from 'fastify'
 
 import { STATUS_INFO } from '@/constants'
-import { makeCheckInUseCase } from '@/UseCases/factories/make-check-in.user-case'
-import {
-  checkInBodySchema,
-  checkInParamsSchema,
-} from '@/validations/check-in/check-in-user'
+import { LateCheckInValidationError } from '@/UseCases/errors/late-check-in-validation-error'
+import { ResourceNotFoundError } from '@/UseCases/errors/resource-not-found-error'
+import { makeValidateCheckInUseCase } from '@/UseCases/factories/make-validate-check-in'
+import { validateCheckInIdParamsSchema } from '@/validations/check-in/validate-check-in'
 
-class CheckInUserController {
+class ValidateCheckInController {
   async handle(request: FastifyRequest, reply: FastifyReply) {
-    const body = request.body
     const params = request.params
+    const paramsValidated = validateCheckInIdParamsSchema.parse(params)
+    try {
+      const makeValidateCheckIn = makeValidateCheckInUseCase()
+      await makeValidateCheckIn.execute({
+        checkInId: paramsValidated.id,
+      })
 
-    const bodyData = checkInBodySchema.parse(body)
-    const paramsData = checkInParamsSchema.parse(params)
+      return reply.status(STATUS_INFO.NO_CONTENT.code).send()
+    } catch (error) {
+      if (
+        error instanceof ResourceNotFoundError ||
+        error instanceof LateCheckInValidationError
+      ) {
+        return reply.status(error.code).send({
+          statusCode: error.code,
+          message: error.message,
+        })
+      }
 
-    const makeCheckIn = makeCheckInUseCase()
-    const checkIn = await makeCheckIn.execute({
-      gymId: paramsData.gymId,
-      userId: request.user.sub,
-      userLatitude: bodyData['user-latitude'],
-      userLongitude: bodyData['user-longitude'],
-    })
-
-    return reply.status(STATUS_INFO.CREATED.code).send({
-      data: checkIn,
-    })
+      throw error
+    }
   }
 }
 
-export { CheckInUserController }
+export { ValidateCheckInController }
